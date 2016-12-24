@@ -8,6 +8,29 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
+        <TextBlock x:Name="status" Grid.ColumnSpan="2" 
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top" Margin="50"/>
+
+        <Border Margin="100" Background="#DDFFDD">
+            <StackPanel>            
+                <TextBlock>Send</TextBlock>
+                <TextBox Margin="5" x:Name="sendText"/>
+
+                <TextBlock Margin="5" x:Name="sentText"/>
+            </StackPanel>
+        </Border>
+
+        <Border Background="#DDDDFF" Grid.Column="1" Margin="100">
+            <StackPanel>
+                <TextBlock Text="Received"/>
+                <TextBlock x:Name="receiveText" />
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>
