@@ -71,19 +71,19 @@ namespace ColorPickerUwp
             if (map != null && !map.settingColor)
             {
                 var col = (Color)e.NewValue;
-                var hsl = ToHSL(col);
+                var hsv = ToHSV(col);
 
                 map.settingLightness = true;
-                map.LightnessSlider.Value = hsl.Z;
+                map.LightnessSlider.Value = hsv.Z;
                 map.settingLightness = false;
-                map.LightnessMid.Color = FromHSL(new Vector4(hsl.X, 1, 0.5f, 1));
+                map.LightnessMid.Color = FromHSV(new Vector4(hsv.X, 1, 0.5f, 1));
 
-                double angle = Math.PI * 2 * hsl.X;
+                double angle = Math.PI * 2 * hsv.X;
                 Vector2 normalized = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
                 Vector2 halfSize = new Vector2(
                     (float)map.ellipse.ActualWidth / 2,
                     (float)map.ellipse.ActualHeight / 2);
-                Vector2 pos = (hsl.Y/2) * normalized * halfSize * new Vector2(1, -1) + halfSize;
+                Vector2 pos = (hsv.Y/2) * normalized * halfSize * new Vector2(1, -1) + halfSize;
 
                 map.colorX = pos.X;
                 map.colorY = pos.Y;
