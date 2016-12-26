@@ -18,38 +18,34 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid>
-                    <!--<Image Name="image3" />-->
-                    <Grid x:Name="poly">
-                        <!--<Polygon Points="0,250 112,0 388,0 500,250 388,500 112,500"
-                                 Stroke="Purple" StrokeThickness="2">
-                            <Polygon.Fill>
-                                <ImageBrush x:Name="image3"/>
-                            </Polygon.Fill>
-                        </Polygon>-->
+                <Viewbox>
+                    <Grid Width="200" Height="200">
 
-                        <Ellipse Stretch="Uniform" x:Name="ellipse"
-                                 Stroke="Purple" StrokeThickness="2">
-                            <Ellipse.Fill>
-                                <ImageBrush x:Name="image3"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <Viewbox Width="200" Height="200">
+                            <Path Data="M0,100 L42.5,0 L157.5,0 L200,100 L157.5,200 L42.5,200"
+                                  x:Name="ellipse">
+                                <Path.Fill>
+                                    <ImageBrush x:Name="image3" AlignmentX="Left" AlignmentY="Top" 
+                                                Stretch="UniformToFill"/>
+                                </Path.Fill>
+                            </Path>
+                        </Viewbox>
+
+                        <Canvas>
+                            <Thumb x:Name="thumb" Width="30" Height="30" Visibility="Collapsed">
+                                <Thumb.Template>
+                                    <ControlTemplate>
+                                        <Ellipse Stroke="Gray" StrokeThickness="2">
+                                            <Ellipse.Fill>
+                                                <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                    </ControlTemplate>
+                                </Thumb.Template>
+                            </Thumb>
+                        </Canvas>
                     </Grid>
-                    <Canvas>
-                        <Thumb x:Name="thumb" Width="30" Height="30" Visibility="Collapsed">
-                            <Thumb.Template>
-                                <ControlTemplate>
-                                    <Ellipse Stroke="Gray" StrokeThickness="2">
-                                        <Ellipse.Fill>
-                                            <SolidColorBrush Color="{Binding Color, ElementName=map}"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                </ControlTemplate>
-                            </Thumb.Template>
-                        </Thumb>
-                    </Canvas>
-                </Grid>
-                
+                </Viewbox>
                 <Grid Grid.Column="1" Margin="10">
                     <Rectangle x:Name="LightnessBackground"  RadiusX="2" RadiusY="2"/>
                     <Slider ValueChanged="lightnessChanged" Minimum="0" Maximum="1" Value="0.5"

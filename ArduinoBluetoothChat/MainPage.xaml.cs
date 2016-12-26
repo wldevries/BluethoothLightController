@@ -31,6 +31,7 @@ namespace ArduinoBluetoothChat
         {
             this.cancellationSource.Cancel();
             this.cancellationSource = null;
+            this.bluetooth?.Dispose();
         }
 
         private async void SendText_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -71,7 +72,6 @@ namespace ArduinoBluetoothChat
         {
             this.sendText.IsEnabled = false;
             this.status.Text = "Connecting..";
-            this.colorMap.IsEnabled = false;
 
             try
             {
@@ -82,12 +82,13 @@ namespace ArduinoBluetoothChat
             catch (Exception)
             {
                 this.status.Text = "Could not connect";
+                this.bluetooth?.Dispose();
+                this.bluetooth = null;
                 return;
             }
 
             this.sendText.IsEnabled = true;
             this.status.Text = "Connected";
-            this.colorMap.IsEnabled = true;
 
             this.cancellationSource = new CancellationTokenSource();
             while (!this.cancellationSource.IsCancellationRequested)

@@ -76,10 +76,10 @@ namespace ArduinoBluetoothChat
 
         public void Dispose()
         {
-            this.socket.Dispose();
-            this.dataReader.Dispose();
-            this.dataWriter.Dispose();
-            this.device.Dispose();
+            this.socket?.Dispose();
+            this.dataReader?.Dispose();
+            this.dataWriter?.Dispose();
+            this.device?.Dispose();
         }
     }
 }
