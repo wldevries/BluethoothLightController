@@ -15,8 +15,13 @@
                        HorizontalAlignment="Center"
                        Margin="10"/>
 
+                <TextBlock x:Name="colorValue" HorizontalAlignment="Center" Margin="10 0 10 10"/>
+
+                <col:ColorMap x:Name="colorMap"/>
+
                 <Border Margin="10"
                         Height="200"
+                        Visibility="Collapsed"
                         Background="#DDFFDD">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -32,11 +37,10 @@
                     </Grid>
                 </Border>
 
-                <col:ColorMap x:Name="colorMap"/>
-
                 <Border Background="#DDDDFF"
                         Height="200"
-                        Margin="10">                    
+                        Margin="10"
+                        Visibility="Collapsed">                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

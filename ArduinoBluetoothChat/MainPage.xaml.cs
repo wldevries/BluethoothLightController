@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -15,13 +16,21 @@ namespace ArduinoBluetoothChat
     public sealed partial class MainPage : Page
     {
         private Bluetooth bluetooth;
+        private CancellationTokenSource cancellationSource;
 
         public MainPage()
         {
             this.InitializeComponent();
             this.Loaded += MainPage_Loaded;
-
+            this.Unloaded += MainPage_Unloaded;
+            this.colorMap.ColorChanged += ColorMap_ColorChanged;
             this.sendText.KeyDown += SendText_KeyDown;
+        }
+
+        private void MainPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.cancellationSource.Cancel();
+            this.cancellationSource = null;
         }
 
         private async void SendText_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -36,16 +45,19 @@ namespace ArduinoBluetoothChat
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.colorMap.ColorChanged += ColorMap_ColorChanged;
+        { 
             await StartBluetooth();
         }
 
         private async void ColorMap_ColorChanged(Windows.UI.Color obj)
         {
-            await SendColor("R", obj.R);
-            await SendColor("G", obj.G);
-            await SendColor("B", obj.B);
+            this.colorValue.Text = $"Color: R {(int)obj.R} G {(int)obj.G} B {(int)obj.B}";
+            if (this.bluetooth != null)
+            {
+                await SendColor("R", obj.R);
+                await SendColor("G", obj.G);
+                await SendColor("B", obj.B);
+            }
         }
 
         private async Task SendColor(string name, byte r)
@@ -59,17 +71,28 @@ namespace ArduinoBluetoothChat
         {
             this.sendText.IsEnabled = false;
             this.status.Text = "Connecting..";
+            this.colorMap.IsEnabled = false;
 
-            this.bluetooth = new Bluetooth();
-            await bluetooth.Find();
-            await bluetooth.ConnectAsync();
+            try
+            {
+                this.bluetooth = new Bluetooth();
+                await bluetooth.Find();
+                await bluetooth.ConnectAsync();
+            }
+            catch (Exception)
+            {
+                this.status.Text = "Could not connect";
+                return;
+            }
 
             this.sendText.IsEnabled = true;
             this.status.Text = "Connected";
+            this.colorMap.IsEnabled = true;
 
-            while (true)
+            this.cancellationSource = new CancellationTokenSource();
+            while (!this.cancellationSource.IsCancellationRequested)
             {
-                var line = await this.bluetooth.ReadLine();
+                var line = await this.bluetooth.ReadLine(cancellationSource.Token);
                 this.receiveText.Text += line + Environment.NewLine;
             }
         }

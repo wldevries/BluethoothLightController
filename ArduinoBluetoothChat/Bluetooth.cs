@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
@@ -10,7 +11,6 @@ namespace ArduinoBluetoothChat
 {
     public class Bluetooth : IDisposable
     {
-        private string serviceName;
         private StreamSocket socket;
         private DataReader dataReader;
         private DataWriter dataWriter;
@@ -51,10 +51,10 @@ namespace ArduinoBluetoothChat
             await this.dataWriter.StoreAsync();
         }
 
-        public async Task<string> ReadLine()
+        public async Task<string> ReadLine(CancellationToken cancelToken)
         {
             const uint ReadBufferLength = 1024;
-            while (true)
+            while (!cancelToken.IsCancellationRequested)
             {
                 var bytesRead = await this.dataReader.LoadAsync(ReadBufferLength);
                 if (bytesRead > 0)
@@ -69,7 +69,9 @@ namespace ArduinoBluetoothChat
                         return lines[0];
                     }
                 }
-            }        
+            }
+
+            return null;      
         }
 
         public void Dispose()
