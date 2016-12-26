@@ -5,32 +5,50 @@
     xmlns:local="using:ArduinoBluetoothChat"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:col="using:ColorPickerUwp"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
-        <TextBlock x:Name="status" Grid.ColumnSpan="2" 
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top" Margin="50"/>
-
-        <Border Margin="100" Background="#DDFFDD">
-            <StackPanel>            
-                <TextBlock>Send</TextBlock>
-                <TextBox Margin="5" x:Name="sendText"/>
-
-                <TextBlock Margin="5" x:Name="sentText"/>
-            </StackPanel>
-        </Border>
-
-        <Border Background="#DDDDFF" Grid.Column="1" Margin="100">
+        <ScrollViewer>
             <StackPanel>
-                <TextBlock Text="Received"/>
-                <TextBlock x:Name="receiveText" />
+                <TextBlock x:Name="status"
+                       HorizontalAlignment="Center"
+                       Margin="10"/>
+
+                <Border Margin="10"
+                        Height="200"
+                        Background="#DDFFDD">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock>Send</TextBlock>
+                        <TextBox Margin="5" x:Name="sendText" Grid.Row="1"/>
+                        <ScrollViewer Grid.Row="2">
+                            <TextBlock Margin="5" x:Name="sentText"/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <col:ColorMap x:Name="colorMap"/>
+
+                <Border Background="#DDDDFF"
+                        Height="200"
+                        Margin="10">                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Received"/>
+                        <ScrollViewer Grid.Row="1">
+                            <TextBlock x:Name="receiveText" />
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
             </StackPanel>
-        </Border>
+        </ScrollViewer>
     </Grid>
 </Page>

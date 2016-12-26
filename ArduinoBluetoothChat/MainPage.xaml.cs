@@ -30,14 +30,29 @@ namespace ArduinoBluetoothChat
             {
                 var text = this.sendText.Text;
                 this.sendText.Text = "";
-                this.sentText.Text = text + Environment.NewLine + this.sentText.Text;
+                this.sentText.Text = this.sentText.Text + text + Environment.NewLine;
                 await this.bluetooth.WriteLine(text);
             }
         }
 
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            this.colorMap.ColorChanged += ColorMap_ColorChanged;
             await StartBluetooth();
+        }
+
+        private async void ColorMap_ColorChanged(Windows.UI.Color obj)
+        {
+            await SendColor("R", obj.R);
+            await SendColor("G", obj.G);
+            await SendColor("B", obj.B);
+        }
+
+        private async Task SendColor(string name, byte r)
+        {
+            var msg = $"{name} {(int)r}";
+            this.sentText.Text += Environment.NewLine + msg;
+            await this.bluetooth.WriteLine(msg);
         }
 
         private async Task StartBluetooth()
