@@ -131,6 +131,7 @@ namespace ColorPicker.Shared
 
         public static Color FromHSV(double hue, double saturation, double value)
         {
+            hue = hue * 360;
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
             double f = hue / 60 - Math.Floor(hue / 60);
 

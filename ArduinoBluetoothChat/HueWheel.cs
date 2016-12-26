@@ -17,16 +17,13 @@ namespace ColorPicker.Shared
 {
     public static class HueWheel
     {
-
-        public static Task CreateHueCircle(WriteableBitmap bmp3, float lightness)
+        public static Task CreateBitmap(WriteableBitmap bitmap, float lightness, Func<Vector4, Color> colorSpace)
         {
-            return FillBitmap(bmp3, (x, y) =>
+            return FillBitmap(bitmap, (x, y) =>
             {
-                return CalcWheelColor(x, y, lightness);
+                return GetWheelColor(x, y, lightness, colorSpace);
             });
         }
-
-
 
         public static async Task FillBitmap(WriteableBitmap bmp, Func<float, float, Color> fillPixel)
         {
@@ -42,7 +39,7 @@ namespace ColorPicker.Shared
                 {
                     for (int x = 0; x < height; x++)
                     {
-                        var color = fillPixel((float)x / width, (float)y / height);
+                        var color = fillPixel((x + .5f) / width, (y + .5f) / height);
 #if WINDOWS_PHONE
                         bmp.Pixels[x + y * width] = WriteableBitmapExtensions.ConvertColor(color);
 #else
@@ -65,7 +62,7 @@ namespace ColorPicker.Shared
             stream.WriteByte(color.A);
         }
 
-        public static Color CalcWheelColor(float x, float y, float lightness)
+        public static Color GetWheelColor(float x, float y, float lightValue, Func<Vector4, Color> colorSpace)
         {
             x = x - 0.5f;
             y = (1 - y) - 0.5f;
@@ -75,9 +72,7 @@ namespace ColorPicker.Shared
                 (float)Math.Atan2(y, x);
             if (saturation > 1)
                 saturation = 1;
-            // return new Color();
-            //else
-            return FromHSL(new Vector4(hue / ((float)Math.PI * 2), saturation, lightness, 1));
+            return colorSpace(new Vector4(hue / ((float)Math.PI * 2), saturation, lightValue, 1));
         }
     }
 }

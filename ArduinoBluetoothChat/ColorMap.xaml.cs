@@ -17,6 +17,8 @@ namespace ColorPickerUwp
 {
     public sealed partial class ColorMap : UserControl
     {
+        private readonly Func<Vector4, Color> ColorSpace = FromHSV;
+
         private PointerPoint lastPoint;
         private double colorX, colorY;
         private WriteableBitmap bmp3;
@@ -139,13 +141,14 @@ namespace ColorPickerUwp
             if (!this.isloaded) return false;
             var x = this.colorX / ellipse.ActualWidth;
             var y = 1 - this.colorY / ellipse.ActualHeight;
-            var selectedColor = HueWheel.CalcWheelColor((float)x, 1 - (float)y, (float)this.LightnessSlider.Value);
+            var selectedColor = HueWheel.GetWheelColor((float)x, 1 - (float)y, 
+                (float)this.LightnessSlider.Value, ColorSpace);
 
             if (selectedColor.A > 0)
             {
                 this.SetColor(selectedColor);
                 this.LightnessStart.Color = Colors.White;
-                this.LightnessMid.Color = HueWheel.CalcWheelColor((float)x, 1 - (float)y, 0.5f);
+                this.LightnessMid.Color = HueWheel.GetWheelColor((float)x, 1 - (float)y, 0.5f, ColorSpace);
                 this.LightnessEnd.Color = Colors.Black;
                 return true;
             }
@@ -163,8 +166,8 @@ namespace ColorPickerUwp
 
         private async void MeshCanvas_Loaded(object sender, RoutedEventArgs e)
         {
-            bmp3 = new WriteableBitmap(1000, 1000);
-            await HueWheel.CreateHueCircle(bmp3, 0.5f);
+            bmp3 = new WriteableBitmap(50, 50);
+            await HueWheel.CreateBitmap(bmp3, 1f, ColorSpace);
             this.image3.ImageSource = bmp3;
             this.isloaded = true;
         }
